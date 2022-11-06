@@ -1,0 +1,84 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id "de.undercouch.download" version "5.3.0"
+}
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    modules = ['javafx.controls']
+}
+
+sourceSets {
+    core {
+        java {
+            srcDirs 'src/main'
+            exclude '**/ui/*.java'
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.10'
+    coreImplementation 'com.google.code.gson:gson:2.10'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+// Custom Tasks
+
+task downloadResources(type: Download) {
+    src 'https://datahub.io/core/covid-19/r/covid-19_zip.zip'
+    dest file("$buildDir/tmp/resources/covid-19_zip.zip")
+    onlyIfModified true
+}
+
+task unzipResources(type: Copy, dependsOn: downloadResources) {
+    from zipTree(file("$buildDir/tmp/resources/covid-19_zip.zip"))
+    into file("$buildDir/tmp/resources/covid-19_zip")
+}
+
+task prepareResources (type: Copy, dependsOn: unzipResources) {
+    from file("$buildDir/tmp/resources/covid-19_zip/data/countries-aggregated_json.json")
+    into file("src/main/resources/")
+}
+
+task buildCore (type: JavaCompile) {
+    classpath = sourceSets.core.runtimeClasspath
+}
+
+task buildUI (type: JavaCompile) {
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task jarCore (type: Jar, dependsOn: buildCore) {
+    appendix = 'core'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.core.output
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task jarUI (type: Jar, dependsOn: buildUI) {
+    appendix = 'ui'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from sourceSets.main.output
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task runCore (type: JavaExec, dependsOn: [ 'jarCore', 'prepareResources'] ) {
+    classpath = files("$buildDir/libs/fwt22-ueb01-core.jar")
+    main = 'de.unitrier.st.core.Main'
+}
+
+task runUI (type: JavaExec, dependsOn: [ 'jarUI', 'prepareResources'] ) {
+    classpath = files("$buildDir/libs/fwt22-ueb01-ui.jar")
+    main = 'de.unitrier.st.ui.Ui'
+}

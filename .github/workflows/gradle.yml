@@ -1,9 +1,6 @@
 # action.yml
 name: 'Build and Analise'
-description: 'Gradle tasks to build and analise the code'
-on:
-  push:
-    branhes: [ "main" ]
+on: [push]
 
 permissions:
   contents: read

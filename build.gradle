@@ -16,7 +16,6 @@ javafx {
 sourceSets {
     core {
         java {
-            srcDirs 'src/main'
             exclude '**/ui/*.java'
         }
     }

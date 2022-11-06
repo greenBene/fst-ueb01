@@ -13,7 +13,7 @@ public class DataLoader {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String str;
             while ((str = br.readLine()) != null) {
-                System.out.println(str);
+                // System.out.println(str); Commentet out since output killed my console. 
                 json.append(str);
             }
             br.close();

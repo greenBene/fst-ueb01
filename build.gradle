@@ -14,6 +14,12 @@ javafx {
     modules = ['javafx.controls']
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
 sourceSets {
     core {
         java {

@@ -4,6 +4,7 @@ import de.unitrier.st.core.DataParser;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class DataTest {
         DataParser dataParser = new DataParser();
         String json = dataLoader.loadJsonFile("countries-aggregated_json.json");
         Map<String, List<CountryDataPoint>> map = dataParser.parseJsonData(json);
-        assertNotNull(map.get("Afghanistan"));
+        assertNull(map.get("Afghanistan"));
     }
 
 }

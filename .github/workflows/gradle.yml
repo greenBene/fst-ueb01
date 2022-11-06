@@ -1,5 +1,5 @@
 # action.yml
-name: 'Build and Analise'
+name: 'Build and Analyse'
 on: [push]
 
 permissions:

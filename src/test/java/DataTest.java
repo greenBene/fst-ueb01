@@ -17,7 +17,7 @@ public class DataTest {
         DataParser dataParser = new DataParser();
         String json = dataLoader.loadJsonFile("countries-aggregated_json.json");
         Map<String, List<CountryDataPoint>> map = dataParser.parseJsonData(json);
-        assertNotNull(map.get("Afghanistan"));
+        assertNull(map.get("Afghanistan"));
     }
 
 }

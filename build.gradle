@@ -1,3 +1,4 @@
+// Benedikt Maria Beckermann, 1599203
 plugins {
     id 'java'
     id 'application'

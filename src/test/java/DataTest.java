@@ -1,3 +1,4 @@
+// Benedikt Maria Beckermann, 1599203
 import de.unitrier.st.core.CountryDataPoint;
 import de.unitrier.st.core.DataLoader;
 import de.unitrier.st.core.DataParser;
@@ -17,7 +18,7 @@ public class DataTest {
         DataParser dataParser = new DataParser();
         String json = dataLoader.loadJsonFile("countries-aggregated_json.json");
         Map<String, List<CountryDataPoint>> map = dataParser.parseJsonData(json);
-        assertNull(map.get("Afghanistan"));
+        assertNotNull(map.get("Afghanistan"));
     }
 
 }

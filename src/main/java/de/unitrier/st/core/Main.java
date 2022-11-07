@@ -1,5 +1,5 @@
 package de.unitrier.st.core;
-
+// Benedikt Maria Beckermann, 1599203
 //import de.unitrier.st.ui.Ui;
 
 public class Main {

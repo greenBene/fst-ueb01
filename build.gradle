@@ -21,17 +21,8 @@ java {
     }
 }
 
-sourceSets {
-    core {
-        java {
-            exclude '**/ui/*.java'
-        }
-    }
-}
-
 dependencies {
     implementation 'com.google.code.gson:gson:2.10'
-    coreImplementation 'com.google.code.gson:gson:2.10'
     testImplementation 'junit:junit:4.13.2'
 }
 
@@ -61,39 +52,44 @@ task prepareResources (type: Copy, dependsOn: unzipResources) {
     into file("src/main/resources/")
 }
 
-task buildCore (type: JavaCompile) {
-    classpath = sourceSets.core.runtimeClasspath
-}
-
-task buildUI (type: JavaCompile) {
-    classpath = sourceSets.main.runtimeClasspath
-}
-
-task jarCore (type: Jar, dependsOn: buildCore) {
-    appendix = 'core'
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from sourceSets.core.output
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+task buildCore {
+    doLast {
+        sourceSets {
+            main {
+                java {
+                    exclude '**/ui/*.java'
+                }
+            }
+        }
     }
+
+    finalizedBy(build)
 }
 
-task jarUI (type: Jar, dependsOn: buildUI) {
-    appendix = 'ui'
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    from sourceSets.main.output
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+task buildUI {
+    doLast {
+        sourceSets {
+            main {
+                java {
+                    
+                }
+            }
+        }
     }
+
+    finalizedBy(build)
 }
 
-task runCore (type: JavaExec, dependsOn: [ 'jarCore', 'prepareResources'] ) {
-    classpath = files("$buildDir/libs/fwt22-ueb01-core.jar")
-    main = 'de.unitrier.st.core.Main'
+task runCore (dependsOn: [ 'buildCore', 'prepareResources'] ) {
+    doLast {
+        mainClassName = 'de.unitrier.st.core.Main'
+    }
+    finalizedBy(run)
 }
 
-task runUI (type: JavaExec, dependsOn: [ 'jarUI', 'prepareResources'] ) {
-    classpath = files("$buildDir/libs/fwt22-ueb01-ui.jar")
-    main = 'de.unitrier.st.ui.Ui'
+task runUI (dependsOn: [ 'buildUI', 'prepareResources'] ) {
+    doLast {
+        mainClassName = 'de.unitrier.st.ui.Ui'
+    }
+    finalizedBy(run)
 }
